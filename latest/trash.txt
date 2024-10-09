@@ -1,0 +1,26 @@
+ int selectedColumn = event.GetCol();
+
+  int gridCellCount = grid.GetNumberRows();
+	std::cout << "Grid cell count: " << gridCellCount << std::endl;
+	std::cout << "Selected row: " << selectedRow << std::endl;
+  std::cout << "Last selected row: " << previousCell << std::endl;
+
+	std::cout << "[!] Creating attributes" << std::endl;
+	wxGridCellAttr* selectedAttr = new wxGridCellAttr();
+	selectedAttr->SetBackgroundColour(wxColour(84, 85, 85));
+	selectedAttr->SetTextColour(*wxBLACK);
+
+	wxGridCellAttr* defaultAttr = new wxGridCellAttr();
+	defaultAttr->SetBackgroundColour(wxColour(44, 45, 45));
+	defaultAttr->SetTextColour(*wxWHITE);
+	std::cout << "[+] Done creating attributes, setting atrributes" << std::endl;
+
+  grid.SetAttr(previousCell, 0, defaultAttr);
+  grid.SetAttr(previousCell, 1, defaultAttr);
+
+  grid.SetAttr(selectedRow, 0, selectedAttr);
+  grid.SetAttr(selectedRow, 1, selectedAttr);
+
+  previousCell = selectedRow;
+
+	grid.ForceRefresh();
