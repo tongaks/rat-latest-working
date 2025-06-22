@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+
+<style type="text/css">
+	* {
+		margin: 0;
+		padding: 0;
+	}
+
+	body {
+		font-family: arial;
+		width: 100vw;
+		height: 100vh;
+		
+		background: #d2d2d2;
+/*	    background-image: linear-gradient(180deg, lightgreen, limegreen);*/
+	}
+
+	.bar {
+		width: 100%;
+		padding: 5px;
+		background: #1164f4;
+		color: white;
+	}
+
+	.clients-connected {
+		display: flex;
+		width: 100%;
+	}
+
+	.client-container {
+		padding: 10px;
+		margin: 10px 10px;
+		background: whitesmoke;
+		text-align: center;
+		height: fit-content;
+		border-radius: 10px;
+		box-shadow: 1px 2px 6px rgba(0, 0, 0, .5);
+		width: fit-content;
+	}
+
+	.controls {
+		display: flex;
+		margin: 13px auto;
+	}
+
+	.button {
+		user-select: none;
+		cursor: pointer;
+		margin: auto 5px;
+		width: fit-content;
+		padding: 10px 15px;
+		border-radius: 9999px;
+		box-shadow: 1px 2px 6px rgba(0, 0, 0, .5);
+		position: relative;
+		text-shadow: 1px -1px 2px rgba(0, 0, 0, .5);
+		transition: transform .5s;
+	}
+
+	.button:hover {
+		box-shadow: 1px 3px 6px rgba(0, 0, 0, .5);
+		transform: translateY(-2px);
+	}
+
+	.button::after {
+		content: "";
+		width: calc(100% - 40%);
+		position: absolute;
+		top: 6%; left: 14%;
+		background-image: linear-gradient(to bottom, rgba(255, 255, 255, .8), rgba(255, 255, 255, .3));
+		border-radius: 9999px;
+		padding: 6px;
+	}
+
+	#shutdown {
+		color: white;
+		background-image: linear-gradient(to bottom, #ec2424, #fb7979);
+	}
+
+	#restart {
+		color: white;
+		background-image: linear-gradient(to bottom, green, #27f118);
+	}
+
+	#logoff {
+		color: white;
+		background-image: linear-gradient(to bottom, #077be2, #43a5fb);
+	}
+</style>
+
+<body>
+
+<div class="bar">
+	<h1>Command and control</h1>
+</div>
+
+<div class="clients-connected">
+<div class="client-container">
+	<h1>PC 6</h1>
+	<!-- <h1>Client #1</h1> -->
+	<div class="controls">
+		<div id="shutdown" class="button">Shutdown</div>
+		<div id="restart" class="button">Restart</div>
+		<div id="logoff" class="button">Log off</div>
+	</div>
+</div>
+
+<div class="client-container">
+	<h1>PC 7</h1>
+	<!-- <h1>Client #2</h1> -->
+	<div class="controls">
+		<div id="shutdown" class="button">Shutdown</div>
+		<div id="restart" class="button">Restart</div>
+		<div id="logoff" class="button">Log off</div>
+	</div>
+</div>
+</div>
+
+</body>
+</html>
