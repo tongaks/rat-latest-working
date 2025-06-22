@@ -61,11 +61,13 @@ void HandleCommands(std::string command, SOCKET sock) {
 		std::cout << "[!] Server sent a shutdown signal.\n"; // shutdown
 		send(sock, "ok", 2, 0);
 		std::this_thread::sleep_for(std::chrono::seconds(2));	
+        closesocket(sock);      // close before signing out
 		system("shutdown /s /t 5");
 	} else if (command == "893234") {
 		std::cout << "[!] Server sent a restart signal.\n"; // restart
 		send(sock, "ok", 2, 0);
 		std::this_thread::sleep_for(std::chrono::seconds(2));	
+        closesocket(sock);      // close before signing out
 		system("shutdown /r");	
 	} else if (command == "837453") {
 		std::cout << "[!] Server sent a lock signal.\n"; // lock
