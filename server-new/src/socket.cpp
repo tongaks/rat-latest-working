@@ -38,7 +38,13 @@ void Window::HandleIncomingConnection() {
 			client_count++;
 
 			char buffer[1024];
-			recv(client_socket, buffer, sizeof(buffer), 0);
+			int received = recv(client_socket, buffer, sizeof(buffer), 0);
+
+	        if (received <= 0) {
+	        	std::string err = "Server received this from " + std::string(client_ip) + " error code: " + std::to_string(received);
+	            Error(err);
+	            continue;
+	        }
 
 	        if (strlen(buffer) == 3) {	// check for client's id
 	            AddContactToGrid(buffer, client_ip);
@@ -66,7 +72,7 @@ void Window::HandleClient(int socket, std::string ip, int pos) {
         int received = recv(socket, buffer, sizeof(buffer), 0);
 
         if (received < 0) {
-        	std::string err = "Server had a problem receiving the data from " + ip;
+        	std::string err = "Server had a problem receiving the data from " + ip + " error code: " + std::to_string(received);
             Error(err);
             break;
         }
@@ -74,21 +80,22 @@ void Window::HandleClient(int socket, std::string ip, int pos) {
         if (received == 0) {
         	std::string err = "Client " + ip + " disconnected from the server.";
             Error(err);
-            
-            {
-            
-            clients_grid->DeleteRows(pos);
-            client_mutex.lock();
-            client_count--;
-            client_mutex.unlock();
-
-            }
             break;
         }
 
         if (received > 0 && strcmp(buffer, "ping") == 0) {
             send(socket, "pong", 4, 0);  // Send pong back
         }
+    }
+
+    {
+    
+    clients_grid->DeleteRows(pos);
+    client_mutex.lock();
+    client_count--;
+    client_mutex.unlock();
+    client_sockets.erase(client_sockets.begin() + socket);
+
     }
 
     close(socket);  

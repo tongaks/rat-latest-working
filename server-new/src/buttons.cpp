@@ -28,7 +28,7 @@ void Window::OnButtonRestart(wxCommandEvent &event) {
 	}
 
 	std::string msg = "Restart signal was sent to " + current_client;
-	Announcement(msg);
+	Announcement(msg + "cmd: " + cmd);
 }
 
 void Window::OnButtonClosePrograms(wxCommandEvent &event) {
