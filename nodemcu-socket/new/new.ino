@@ -19,7 +19,7 @@ void setup() {
 	WiFi.hostname("nodee");
 
 	ConnectToWifi(ssid, passwd);
-	SetupWebpages(web_server, clients, message);
+	SetupWebpages(web_server, clients);
 
 	web_server.begin();
 	wifi_server.begin();

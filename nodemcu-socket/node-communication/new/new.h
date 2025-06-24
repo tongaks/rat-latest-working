@@ -1,4 +1,5 @@
-#include "web.h"
+#include "new-web.h"
+std::vector<String> clients_ip;
 
 void ConnectToWifi(const char* ssid, const char* passwd) {
 	WiFi.begin(ssid, passwd);
@@ -9,14 +10,14 @@ void ConnectToWifi(const char* ssid, const char* passwd) {
 
 void SetupWebpages(AsyncWebServer &server, std::vector<WiFiClient> &clients) {
 	server.on("/", HTTP_GET, [&clients](AsyncWebServerRequest *request) {
-		request->send(200, "text/html", MainPage(clients.size()));
+		request->send(200, "text/html", MainPage(clients.size(), clients_ip));
 	});
 
 	// when a client connected create a div of it with the somoe id so that
 	// when the client receive shutdown, the div gets remove by js  
 	server.on("/shutdown", HTTP_GET, [&clients](AsyncWebServerRequest *request) {
 	    if (request->hasParam("id")) {
-	        int client_id = request->getParam("id")->value().toInt()-1;
+	        int client_id = request->getParam("id")->value().toInt();
 	        clients[client_id].print("229892");
 	        delay(500);
 			request->send(200, "text/plain", "OK");
@@ -25,8 +26,17 @@ void SetupWebpages(AsyncWebServer &server, std::vector<WiFiClient> &clients) {
 
 	server.on("/restart", HTTP_GET, [&clients](AsyncWebServerRequest *request) {
 	    if (request->hasParam("id")) {
-	        int client_id = request->getParam("id")->value().toInt()-1;
+	        int client_id = request->getParam("id")->value().toInt();
 	        clients[client_id].print("893234");
+
+			request->send(200, "text/plain", "OK");
+		}
+	});	
+
+	server.on("/logoff", HTTP_GET, [&clients](AsyncWebServerRequest *request) {
+	    if (request->hasParam("id")) {
+	        int client_id = request->getParam("id")->value().toInt();
+	        clients[client_id].print("837453");
 
 			request->send(200, "text/plain", "OK");
 		}

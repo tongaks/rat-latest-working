@@ -11,7 +11,7 @@ AsyncWebServer web_server(80);
 std::vector<WiFiClient> clients;
 
 void setup() {
-	Serial.begin(115200);
+	Serial.begin(9600);
 	Serial.println("Begin");
 
 	WiFi.hostname("nodee");
@@ -31,6 +31,7 @@ void loop() {
 	if (new_client.connected()) {
 		Serial.println("[+] A client is connected.");
 		clients.push_back(new_client);
+		clients_ip.push_back(new_client.remoteIP().toString());
 	}
 
 	HandleConnection(clients);

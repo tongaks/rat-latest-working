@@ -26,7 +26,8 @@ void loop() {
 
 	if (new_client.connected()) {
 		clients.push_back(new_client);
-		new_client.print("ping");
+		clients_ip.push_back(new_client.remoteIP().toString());
+		new_client.println("ping");
 	}
 
 	HandleConnection(clients);

