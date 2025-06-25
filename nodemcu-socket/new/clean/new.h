@@ -1,5 +1,15 @@
 #include "new-web.h"
-std::vector<String> clients_ip;
+int clients_count = 0;
+
+struct {
+	WiFiClient w_client;
+	String ip_addr;
+	String username;
+} Client;
+
+std::vector<String> clients_names;
+
+std::vector<Client> clients;	// vec to store wifi clients details
 
 void ConnectToWifi(const char* ssid, const char* passwd) {
 	WiFi.begin(ssid, passwd);
@@ -8,9 +18,17 @@ void ConnectToWifi(const char* ssid, const char* passwd) {
 	} Serial.println("[+] Connected to the wifi.");
 }
 
+// void SetupWebpages2(AsyncWebServer &server, std::vector<Client> cl) {
+// 	server.on("/", HTTP_GET, [cl](AsyncWebServerRequest *request) {
+// 		request->send(200, "text/html", MainPage(cl));
+// 	});	
+// }
+
+
 void SetupWebpages(AsyncWebServer &server, std::vector<WiFiClient> &clients) {
-	server.on("/", HTTP_GET, [&clients](AsyncWebServerRequest *request) {
-		request->send(200, "text/html", MainPage(clients.size(), clients_ip));
+	server.on("/", HTTP_GET, [&clients, clients_names](AsyncWebServerRequest *request) {
+		Serial.println("[!] Client name: " + clients_names[0]);
+		request->send(200, "text/html", MainPage(clients));
 	});
 
 	server.on("/shutdown", HTTP_GET, [&clients](AsyncWebServerRequest *request) {
@@ -39,20 +57,32 @@ void SetupWebpages(AsyncWebServer &server, std::vector<WiFiClient> &clients) {
 }
 
 void HandleConnection(std::vector<WiFiClient> &clients) {
-	for (int i = 0; i < clients.size(); i++) {
-		if (clients[i].connected() && clients[i].available()) {
+    for (int i = 0; i < clients.size(); ) {
+        if (!clients[i].connected()) {
+        	Serial.println("[!] Client: " + String(i+1) + "disconnected");
+            clients[i].stop();
+            clients.erase(clients.begin() + i);
+            continue;
+        }
 
-			String msg = clients[i].readString();
-			if (msg == "pong") clients[i].print("ping");
-			else if (msg == "pongok") {
-				Serial.println("from client: " + msg);
-				clients.erase(clients.begin() + i);
-			}
+        if (clients[i].available()) {
+            String msg = clients[i].readStringUntil('\n');
+            msg.trim();
 
-			Serial.println("from client: " + msg);
-
-		} else if (clients[i].connected()) {
-			clients[i].print("ping");
-		}
-	}
+            if (msg == "pong") {
+                clients[i].print("ping");
+                ++i;
+            } else if (msg.startsWith("username:")) {
+                String username = msg.substring(9);
+                clients_names.push_back(username);
+                Serial.println("[+] New client username: " + username);
+                ++i;
+            } else {
+                Serial.println("[!] Client sent this: " + msg);
+                clients[i].stop();
+                clients.erase(clients.begin() + i);
+                clients_names.erase(clients_names.begin() + i);
+            }
+        } else ++i;
+    }
 }

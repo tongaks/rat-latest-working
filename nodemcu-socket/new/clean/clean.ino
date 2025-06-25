@@ -8,10 +8,11 @@ const char* passwd = "338171802";
 
 WiFiServer wifi_server(8080);
 AsyncWebServer web_server(80);
+
 std::vector<WiFiClient> clients;
 
 void setup() {
-	Serial.begin(9600);
+	Serial.begin(115200);
 	Serial.println("Begin");
 
 	WiFi.hostname("nodee");
@@ -28,11 +29,23 @@ void setup() {
 void loop() {
 	WiFiClient new_client = wifi_server.available();
 
-	if (new_client.connected()) {
-		Serial.println("[+] A client is connected.");
-		clients.push_back(new_client);
-		clients_ip.push_back(new_client.remoteIP().toString());
-	}
+	if (new_client) {
+		if (new_client.connected()) {
+
+				if (new_client.available()) {
+					String msg = new_client.readStringUntil('\n');
+					msg.trim();
+
+					if (msg.startsWith("username:")) {
+						String username = msg.substring(9);
+						clients_names.push_back(username);
+						Serial.println("[+] New client username: " + username);
+					}
+				}
+
+				clients.push_back(new_client);
+			}
+		}
 
 	HandleConnection(clients);
 }

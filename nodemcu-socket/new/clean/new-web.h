@@ -1,4 +1,4 @@
-String MainPage(int client_count, std::vector<String> clients_ip) {
+String MainPage(std::vector<WiFiClient> &client) {
 	String html = "<!DOCTYPE html>";
 	html += "<html>";
 	html += "<head>";
@@ -9,7 +9,7 @@ String MainPage(int client_count, std::vector<String> clients_ip) {
 	html += "<style>";
 	html += "* { padding: 0; margin: 0; font-family: arial; }";
 	html += "body { height: 100vh; display: flex; justify-content: center; align-items: center; }";
-	html += ".container { height: 80%; width: auto; border-radius: 20px; padding: 10px; text-align: center; background: lightgray; }";
+	html += ".container { height: 80%; width: 80%; border-radius: 20px; padding: 10px; text-align: center; background: lightgray; }";
 	html += ".client-container { margin: 10px; display: grid; grid-template-columns: auto auto; gap: 20px; }";
 	html += ".client { padding: 10px; background: limegreen; display: flex; align-items: center; justify-content: space-between; }";
 	html += "#disconnected { background: dimgray; }";
@@ -25,28 +25,35 @@ String MainPage(int client_count, std::vector<String> clients_ip) {
 	html += "<body>";
 	html += "<div class='container'>";
 	html += "<h1>Command control</h1>";
-	html += "<div class='client-container'>";
+	html += "<h1>Client count: " + String(client.size()) + "</h1>";
 
 	// Client 1
-	for (int i = 0; i < client_count; ++i) {
-		html += "<div class='client' id='client-"+String(i)+"'>";
+	if (client.size() == 0) {
+		html += "<h1 style='color: dimgray;'>No client connected</h1>";
+	} else {
+		html += "<div class='client-container'>";
+		for (int i = 0; i < client.size(); ++i) {
+			if (!client[i].connected()) continue;
 
-		html += "<div class='client-details'>";
-		html += "<h1>Client " + String(i+1) +"</h1>";
-		html += "<h3>PC Name: PC</h3>";
-		html += "<h3>IP: " + clients_ip[i] + "</h3>";
-		html += "</div>";
+			html += "<div class='client' id='client-" + String(i) + "'>";
 
-		html += "<div class='client-controls'>";
-		html += "<div onclick='shutdownClient("+String(i)+")' onclick='' class='button' id='shutdown-ctrl'>Shutdown</div>";
-		html += "<div onclick='restartClient("+String(i)+")' onclick='' class='button' id='restart-ctrl'>Restart</div>";
-		html += "<div onclick='logoffClient("+String(i)+")' onclick='' class='button' id='logoff-ctrl'>Logoff</div>";
-		html += "</div>";
+			html += "<div class='client-details'>";
+			html += "<h1>Client " + String(i+1) +"</h1>";
+			// html += "<h3>PC Name: " + c_name[i] + "</h3>";
+			html += "<h3>IP: " + client[i].remoteIP().toString() + "</h3>";
+			html += "</div>";
 
-		html += "</div>";
-	}  
+			html += "<div class='client-controls'>";
+			html += "<div onclick='shutdownClient("+String(i)+")' onclick='' class='button' id='shutdown-ctrl'>Shutdown</div>";
+			html += "<div onclick='restartClient("+String(i)+")' onclick='' class='button' id='restart-ctrl'>Restart</div>";
+			html += "<div onclick='logoffClient("+String(i)+")' onclick='' class='button' id='logoff-ctrl'>Logoff</div>";
+			html += "</div>";
 
-	html += "</div>"; // close client-container
+			html += "</div>";
+			}  
+		html += "</div>"; // close client-container
+		}  
+
 	html += "</div>"; // close container
 
 	html += "<script>";

